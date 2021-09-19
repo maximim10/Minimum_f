@@ -1,10 +1,13 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <cstdlib>
 const int N=2;
-const double E=0.000001;
+const double E=0.0000001;
 using namespace std;
 double func_at_point(vector <double> *point){
+    //double c=pow((*point)[0],2)+pow((*point)[1],8);
+    //double c=pow((*point)[0]-3,2)+pow((*point)[1]+2,8)+1;
     double c=pow(1-(*point)[0],2)+10*pow((*point)[1]-pow((*point)[0],2),2)+2;
     return c;
 };
@@ -84,6 +87,7 @@ void rev(vector < vector <double> > *matr, vector < vector <double> > *matr_rev)
     d=Alg_dop(N,N,matr);
     if (d==0){
         cout<<"E pobolshe nado, grad2 takoe ne perevarivaet"<<endl;
+        exit (-2);
     }
     for (int i=0;i<N;i++){
         for (int j=0;j<N;j++){
@@ -140,7 +144,8 @@ double Find_Min_2(vector <double> *point, vector <double> *grad, vector < vector
     vector < double > point_temp1=(*point), point_temp2=(*point);
     rev(grad2, &grad2_rev);
     double d=0,e=1,a=-1,b=0,c=0;
-    for (int i=0;i<N;i++){ for (int j=0;j<N;j++){ cout<<(*grad2)[i][j]<<" ";}cout<<endl;}
+    for (int i=0;i<N;i++){ for (int j=0;j<N;j++){ cout<<(grad2_rev)[i][j]<<" "; } cout<<endl; } cout<<endl;
+    //for (int i=0;i<N;i++){ for (int j=0;j<N;j++){ cout<<(*grad2)[i][j]<<" "; } cout<<endl; } cout<<endl;
     vector < double > move_vec (N);
     for (int i=0;i<N;i++){
         move_vec[i]=0;
@@ -148,12 +153,17 @@ double Find_Min_2(vector <double> *point, vector <double> *grad, vector < vector
             move_vec[i]-=grad2_rev[i][j]*(*grad)[j];
         }
     }
+    for (int i=0;i<N;i++){ cout<<(move_vec)[i]<<" "; } cout<<endl; cout<<endl;
     grad_at_point(point,grad);
     e=0; for (int i=0;i<N;i++) {e+=(*grad)[i]*move_vec[i];}
     if (e<0) {
         a=+1;
     }
-    for (;;a*=2){cout<<c<<"  "<<e<<endl;
+    if (e==0){
+        cout<<"E pobolshe nado, grad2 takoe ne perevarivaet"<<endl;
+        exit (-3);
+    }
+    for (;;a*=2){
         for (int i=0;i<N;i++){
                 point_temp1[i]=(*point)[i]+a*(move_vec)[i];
         }
