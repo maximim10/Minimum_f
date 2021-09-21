@@ -3,12 +3,19 @@
 #include <cmath>
 #include <cstdlib>
 const int N=2;
-const double E=0.0000001;
+int func_call=0;
+
+const double E=0.000001;
 using namespace std;
 double func_at_point(vector <double> *point){
+    func_call++;
     //double c=pow((*point)[0],2)+pow((*point)[1],8);
     //double c=pow((*point)[0]-3,2)+pow((*point)[1]+2,8)+1;
-    double c=pow(1-(*point)[0],2)+10*pow((*point)[1]-pow((*point)[0],2),2)+2;
+    double c=pow(1-(*point)[0],2)+10*pow((*point)[1]-pow((*point)[0],2),2);
+
+    //double c=pow(1-(*point)[0],2)+pow(2-(*point)[1],2)+pow(3-(*point)[2],2);
+    //double c=pow(1-(*point)[0],2)+2*pow(2-(*point)[1],2)+0.1*pow(3-(*point)[2],4);
+    //double c=pow(1-(*point)[0],2)+2*pow(2-(*point)[1],2)+0.1*pow(3-(*point)[2],2);
     return c;
 };
 void grad_at_point(vector <double> *point, vector <double> *grad){
@@ -190,7 +197,9 @@ int main()
     for (int i=0;i<N;i++) { for (int j=0;j<N;j++) {grad2[i].push_back(0);} }
     double a=func_at_point(&point),n=0;
     double b=a,c,d;
+    int a1=0,a2=0,a3=0,a4=0;
     for(;;){
+        a1++;
         point_temp=point;
         b=Find_Min(&point, &grad);
         cout<<b<<" at step "<<++n<<" at point ("; for (int i=0;i<N;i++) { cout<<point[i]<<", "; } cout<<")"<<endl;
@@ -200,9 +209,12 @@ int main()
         if ((b-a<pow(E,0.5))&&(c<pow(E,0.5))&&(d<pow(E,0.5))) { break; }
         a=b;
     }
+    a2=func_call;
+    func_call=0;
     cout<<"End of 1 path"<<endl;
     n=0;
     for(;;){
+        a3++;
         point_temp=point;
         b=Find_Min_2(&point, &grad, &grad2);
         cout<<b<<" at step "<<++n<<" at point ("; for (int i=0;i<N;i++) { cout<<point[i]<<", "; } cout<<")"<<endl;
@@ -215,6 +227,7 @@ int main()
     cout<<endl;
     cout<<"f = "<<func_at_point(&point)<<" at point (";
     for (int i=0;i<N;i++) { cout<<point[i]<<", "; }
-    cout<<")"<<endl;
+    cout<<");  path1: "<<a1<<" steps, "<<a2<<" calls;  path2: "<<a3<<" steps, "<<func_call<<" calls."<<endl;
+
     return 0;
 }
